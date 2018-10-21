@@ -1,4 +1,4 @@
-# # Technical Support
+# Technical Support
 
  - [Software And Compiler Setup](#setupMain)
    - [Setting Up Your Editing Environment](#settingUpEnv)
