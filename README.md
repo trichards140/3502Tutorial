@@ -35,8 +35,8 @@ To setup your coding environment, the first thing you will need is a text editor
 - ###### [Eclipse](https://www.eclipse.org/) - Windows, Linux, Mac
   - A Good Choice, But Far To Heavy For This Applciation
 
-<a name="sue_qa">
-##### **But, My Editor Isn't Here...**
+
+##### **But, My Editor Isn't Here...**<a name="sue_qa"></a>
 
 - That doesnt mean your editor is bad, it just means that some of the stuff described here might not apply to you.
 
