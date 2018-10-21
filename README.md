@@ -1,4 +1,4 @@
-# Technical Support
+# Installing GCC and Valgrind
 
  - [Software And Compiler Setup](#setupMain)
    - [Setting Up Your Editing Environment](#settingUpEnv)
