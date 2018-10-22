@@ -1,5 +1,5 @@
 <a name="top"></a>
-# Installing GCC and Valgrind
+# Installing GCC and Valgrind 
 
  - [Software And Compiler Setup](#setupMain)
    - [Setting Up Your Editing Environment](#settingUpEnv)
