@@ -199,5 +199,5 @@ Linux: ` valgrind ./outputNameYouGaveToGCCEarlier.out`
 
 ##### HEAP SUMMARY:
 >HEAP SUMMARY:  
-&nbsp &nbsp &nbsp &nbsp in use at exit: 48 bytes in 3 blocks  
+      in use at exit: 48 bytes in 3 blocks  
 &nbsp &nbsp total heap usage: 4 allocs, 1 frees, 560 bytes allocated  
