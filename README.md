@@ -19,6 +19,7 @@
      - [Compile With GCC](#useCompile)
      - [Memory Test With Valgrind](#useValgrind)
      - [Understanding Valgrind Output](#useValgrindOutput)
+ - [Using Input and Output Files](#ioMain)
 
 ## Software And Compiler Setup <a name="setupMain"></a>
 
@@ -198,6 +199,75 @@ Linux: ` valgrind ./outputNameYouGaveToGCCEarlier.out`
 #### The Parts Of A Valgrind Output:
 
 ##### HEAP SUMMARY:
+Gives an overview of the program's memory usage during runtime.
 >HEAP SUMMARY:  
-      in use at exit: 48 bytes in 3 blocks  
-&nbsp &nbsp total heap usage: 4 allocs, 1 frees, 560 bytes allocated  
+in use at exit: 48 bytes in 3 blocks  
+total heap usage: 4 allocs, 1 frees, 560 bytes allocated  
+
+The Heap Summary Describes Two Parts:
+- *in use at exit* - Memory in use when the program exited
+- *total heap usage* - Total memory usage during the program run
+
+##### LEAK SUMMARY:
+Only appears if the program had a memory leak
+>LEAK SUMMARY:  
+definitely lost: 0 bytes in 0 blocks  
+indirectly lost: 0 bytes in 0 blocks  
+possibly lost: 0 bytes in 0 blocks  
+still reachable: 48 bytes in 3 blocks  
+suppressed: 0 bytes in 0 blocks
+
+The Leak Summary Describes [List From Here](http://valgrind.org/docs/manual/faq.html#faq.deflost)
+- *definitely lost* means your program is leaking memory -- fix those leaks!
+
+- *indirectly lost* means your program is leaking memory in a pointer-based structure. (E.g. if the root node of a binary tree is *definitely lost*, all the children will be *indirectly lost*.) If you fix the *definitely lost* leaks, the *indirectly lost* leaks should go away.
+
+- *possibly lost* means your program is leaking memory, unless you're doing unusual things with pointers that could cause them to point into the middle of an allocated block.
+
+- *still reachable* means your program is probably ok -- it didn't free some memory it could have. This is quite common.
+
+- *suppressed* means that a leak error has been suppressed. There are some suppressions in the default suppression files. You can ignore suppressed errors.
+
+#### Advanced Valgrind Usage
+
+`Coming Soon`
+
+
+## Using Input and Output Files <a name="ioMain"></a>
+
+### Master The < and > Symbols
+**<** *is called a left-chevron*  
+**>** *is called a right-chevron*
+
+##### **<** Means
+
+`[into this thing] < [read the contents of this file]`
+
+Example:  
+Windows: `.\outputNameYouGaveToGCCEarlier.exe < .\inputFile.in`  
+Linux: `./outputNameYouGaveToGCCEarlier.out < ./inputFile.in`
+
+##### **>** Means
+
+`[write the output from this] > [into this file] `
+
+Example:  
+Windows: `.\outputNameYouGaveToGCCEarlier.exe > .\outputFile.txt`  
+Linux: `./outputNameYouGaveToGCCEarlier.out > ./outputFile.txt`
+
+##### Using Both
+
+`[Input To This File & Output From This File] < [from this file] > [into this file] `
+
+Example:  
+Windows: `.\outputNameYouGaveToGCCEarlier.exe < .\inputFile.in > .\outputFile.txt`  
+Linux: `./outputNameYouGaveToGCCEarlier.out < ./inputFile.in > ./outputFile.txt`
+
+That's how it's done. No, seriously, it's that simple.
+
+##### Write Your Own Inputs
+- Open a text editor
+- Type the input you would normally type into the command line
+  - Include the enters and don't worry about the output at all
+- Save the file
+- You can use that as an input file with the < symbol
