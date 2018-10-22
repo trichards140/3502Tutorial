@@ -1,4 +1,4 @@
-# Installing GCC and Valgrind
+# Technical Support
 
  - [Software And Compiler Setup](#setupMain)
    - [Setting Up Your Editing Environment](#settingUpEnv)
@@ -11,6 +11,14 @@
    - [Setting Up Valgrind](#vgMain)
      - [Installing Valgrind On Linux](#vgLinux)
      - [Installing Valgrind On Windows](#vgWin)
+   - [Other Software Recommendations](#otherMain)
+     - [Get A Good Console](#otherConsole)
+       - [Consoles For Windows](#otherConsoleWindows)
+ - [Using GCC And Valgrind](#useMain)
+   - [General Use Instructions](#useGeneral)
+     - [Compile With GCC](#useCompile)
+     - [Memory Test With Valgrind](#useValgrind)
+     - [Understanding Valgrind Output](#useValgrindOutput)
 
 ## Software And Compiler Setup <a name="setupMain"></a>
 
@@ -22,11 +30,11 @@ To setup your coding environment, the first thing you will need is a text editor
 - ###### [Atom](https://atom.io/) - Windows, Linux, Mac
   - Like Sublime, But Free, And Better
 - ###### [Notepad++](https://notepad-plus-plus.org/) - Windows
-  - Excellent BareBones Editor, Only For Windows
+  - Excellent Editor That Proves Looks Aren't Everything, Only For Windows
 - ###### [Code::Blocks](http://www.codeblocks.org/) - Windows, Linux, Mac
-  - Another IDE Style, Free, Open Source Editor
-- ###### [Visual Studio Code](https://code.visualstudio.com/) - Windows, Linux, Mac
   - An IDE Style, Free, Open Source Editor
+- ###### [Visual Studio Code](https://code.visualstudio.com/) - Windows, Linux, Mac
+  - Another IDE Style, Free, Open Source Editor
 
 #### **Honorable Mentions** <a name="sue_hon"></a>
 
@@ -35,8 +43,8 @@ To setup your coding environment, the first thing you will need is a text editor
 - ###### [Eclipse](https://www.eclipse.org/) - Windows, Linux, Mac
   - A Good Choice, But Far To Heavy For This Applciation
 
-
-##### **But, My Editor Isn't Here...**<a name="sue_qa"></a>
+<a name="sue_qa">
+##### **But, My Editor Isn't Here...**
 
 - That doesnt mean your editor is bad, it just means that some of the stuff described here might not apply to you.
 
@@ -63,6 +71,12 @@ GCC is a GNU compiler for C, C++, Objective-C, Fortran, Ada, and Go.
 #### Other
 
   >`I Have No Idea - CONTRIBUTION APPRECIATED`
+
+
+##### Now Test To Make Sure It's Working
+  - Open a terminal and type in `gcc -v`
+  - GCC should announce it's version along with some other info
+  - If GCC responded, you're golden.
 
 ### Installing On Windows <a name="gccWin"></a>
 
@@ -110,10 +124,80 @@ GCC is a GNU compiler for C, C++, Objective-C, Fortran, Ada, and Go.
 
   >`I Have No Idea - CONTRIBUTION APPRECIATED`
 
+
+##### Now Test To Make Sure It's Working
+  - Open a terminal and type in `valgrind --version`
+  - Valgrind should announce it's version
+  - If Valgrind responded, you're golden.
+
 ### Installing On Windows <a name="vgWin"></a>
 
+#### Windows 10
 Valgrind Cannot Be Installed Directly On Windows To The Best Of My Knowledge. That does not mean that valgrind cannot be used though Windows:
-- VM Method
+
+Valgrind Can Be Used On Windows Machine Using The New "Linux in a Windows" Method:
+- Linux in a Windows (Windows 10 ONLY)
+  - [Follow This Guide To Install The Linux Subsystem For Windows](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+  - Now Open The Subsystem Console And Follow The Linux Valgrind and GCC Instructions (When Using The Subsystem Console, You Will Need To Follow Linux Instructions)
+
+#### Windows 7 to 8.1
+
+- VM Method Using VirtualBox
   - With Enough Requests I Will Write A Tutorial For This
-- Linux in a Windows
-  - [Supposedly Works On Windows 10, Never Tried This Before](http://www.albertgao.xyz/2016/09/28/how-to-use-valgrind-on-windows/)
+
+## Other Software <a name="otherMain"></a>
+
+### Get A Good Console <a name="otherConsole"></a>
+  You will be interacting with the console a lot, so you should have one that you like.
+#### Recommended Consoles For Windows<a name="otherConsoleWindows"></a>
+- [cmder](http://cmder.net/)
+  - Built on [ConEmu](https://conemu.github.io/), offering a facelift and extra functionality.
+- [ConEmu](https://conemu.github.io/)
+  - Like cmder, but ugly.
+
+## Using GCC and Valgrind <a name="useMain"></a>
+
+### General Use Instructions <a name="useGeneral"></a>
+
+#### Compile With GCC<a name="useCompile"></a>
+
+##### GCC Command Format<a name="useGCCFormat"></a>
+Windows: ` gcc .\fileNameToCompile.c -o .\outputNameYouWant.exe`
+
+Linux: ` gcc ./fileNameToCompile.c -o ./outputNameYouWant.out`
+
+**Notes On How These Are Different**
+- Linux and Windows Have Different Directory Separator Characters.
+  - On Windows we use `\` and on Linux we use `/`
+- Linux and Windows Have Different output extensions.
+  - On Windows we use `.exe` and on Linux we use `.out`
+
+##### GCC Use On Windows
+  - Open a console window
+  - Use `cd` to get to where your .c code is [How To Use `cd`](https://ss64.com/nt/cd.html)
+  - Run gcc [using the format specified above](#useGCCFormat)
+  - then enter `.\outputNameYouGaveToGCCEarlier.exe`, your program should start.
+
+##### GCC Use On Linux (or Linux in A Windows)
+- Open a terminal window
+- Use `cd` to get to where your .c code is [How To Use `cd`](http://www.linfo.org/cd.html)
+- Run gcc [using the format specified above](#useGCCFormat)
+- then enter `./outputNameYouGaveToGCCEarlier.out`, your program should start.
+
+#### Memory Test With Valgrind<a name="useValgrind"></a>
+Once you have compiled the program with GCC, you can use valgrind to find any memory leaks. (and [much more](#advancedValgrind))
+
+##### Valgrind Command Format<a name="useValgrindFormat"></a>
+
+Windows: `Must Use A VM or Subsystem Running Linux`
+
+Linux: ` valgrind ./outputNameYouGaveToGCCEarlier.out`
+
+### Understanding Valgrind Output<a name="useValgrindOutput"></a>
+
+#### The Parts Of A Valgrind Output:
+
+##### HEAP SUMMARY:
+>HEAP SUMMARY:  
+&nbsp &nbsp &nbsp &nbsp in use at exit: 48 bytes in 3 blocks  
+&nbsp &nbsp total heap usage: 4 allocs, 1 frees, 560 bytes allocated  
