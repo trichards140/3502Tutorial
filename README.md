@@ -274,8 +274,19 @@ Line 44 is definitely a problem, nSum->contents dereferences NULL.
 
 ### Pinpoint Memory Leaks With Valgrind <a name="vgAdvLocating"></a>
 
-Valgrind can also be used to find the source of a memory leak. This is less strait forward than segfault recognition.
+Valgrind can also be used to find the source of a memory leak.
 
+To Find The Source Of Memory Leaks With Valgrind:
+- Compile with GCC using the `-g` flag
+- Run Valgrind with the `--tool=memcheck --leak-check=full` flags.
+
+So The Commands Would Look Like This:
+
+Compile With GCC: `gcc -g ./sourceCode.c -o ./fileName.out`  
+Check With Valgrind: `valgrind --tool=memcheck --leak-check=full ./fileName.out`
+
+
+This output is less strait forward than segfault recognition.  
 Lets Take A Look At A Sample Output:
 ```
 ==13422== 708 (16 direct, 692 indirect) bytes in 1 blocks are definitely lost in loss record 7 of 7
@@ -336,10 +347,11 @@ Linux: `./outputNameYouGaveToGCCEarlier.out < ./inputFile.in > ./outputFile.txt`
 
 That's how it's done. No, seriously, it's that simple.
 
-##### Yes, You Can Use It With Valgrind
+##### Yes, You Can Use Redirection Along With Other Commands
 
-This Sort Of Thing Also Works  
-`valgrind ./outputNameYouGaveToGCCEarlier.out < ./inputFile.in > ./outputFile.txt`
+These sorts of things also work:  
+`valgrind ./outputNameYouGaveToGCCEarlier.out < ./inputFile.in > ./outputFile.txt`  
+`time ./outputNameYouGaveToGCCEarlier.out < ./inputFile.in > ./outputFile.txt`
 
 ##### Write Your Own Inputs
 - Open a text editor
@@ -347,3 +359,12 @@ This Sort Of Thing Also Works
   - Include the enters and don't worry about the output at all
 - Save the file
 - You can use that as an input file with the < symbol
+
+##### Don't Want The Output?
+
+In Linux you can dump unwanted output into the void using output redirection into `/dev/null`
+
+Like This:
+`[command] > /dev/null`
+
+This will redirect the output of [command] into the void.
