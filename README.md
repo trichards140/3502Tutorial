@@ -19,7 +19,10 @@
    - [General Use Instructions](#useGeneral)
      - [Compile With GCC](#useCompile)
      - [Memory Test With Valgrind](#useValgrind)
-     - [Understanding Valgrind Output](#useValgrindOutput)
+     - [Basic Valgrind Output](#useValgrindOutput)
+   - [Advanced Valgrind Usage](#vgAdvMain)
+     - [Debugging Segmentation Faults](#vgAdvLinking)
+     - [Pinpointing Memory Leaks](#vgAdvLocating)
  - [Using Input and Output Files](#ioMain)
 
 ## Software And Compiler Setup <a name="setupMain"></a>
@@ -195,7 +198,7 @@ Windows: `Must Use A VM or Subsystem Running Linux`
 
 Linux: ` valgrind ./outputNameYouGaveToGCCEarlier.out`
 
-### Understanding Valgrind Output<a name="useValgrindOutput"></a>
+### Understanding Basic Valgrind Output<a name="useValgrindOutput"></a>
 
 #### The Parts Of A Valgrind Output:
 
@@ -218,7 +221,9 @@ possibly lost: 0 bytes in 0 blocks
 still reachable: 48 bytes in 3 blocks  
 suppressed: 0 bytes in 0 blocks
 
-The Leak Summary Describes [List From Here](http://valgrind.org/docs/manual/faq.html#faq.deflost)
+The Leak Summary Describes:  
+[This List Is From The Offical Valgrind Documentation](http://valgrind.org/docs/manual/faq.html#faq.deflost)
+
 - *definitely lost* means your program is leaking memory -- fix those leaks!
 
 - *indirectly lost* means your program is leaking memory in a pointer-based structure. (E.g. if the root node of a binary tree is *definitely lost*, all the children will be *indirectly lost*.) If you fix the *definitely lost* leaks, the *indirectly lost* leaks should go away.
@@ -229,12 +234,74 @@ The Leak Summary Describes [List From Here](http://valgrind.org/docs/manual/faq.
 
 - *suppressed* means that a leak error has been suppressed. There are some suppressions in the default suppression files. You can ignore suppressed errors.
 
-#### Advanced Valgrind Usage
+## Advanced Valgrind Usage <a name="vgAdvMain"></a>
 
-`Coming Soon`
+Valgrind is much more than just a basic tool to test for memory leaks.
 
+Valgrind can be used to find Segmentation Faults and Actually Locate Memory Leaks
 
-## Using Input and Output Files <a name="ioMain"></a>
+### Debugging Segfaults (SIGSEGV) (signal 11) With Valgrind <a name="vgAdvLinking"></a>
+
+Valgrind can help find segfaults in your c code, the procedure is simple.
+
+- Compile your source code with the `-g` flag *Example:* `gcc -g ./sourceCode.c -o ./fileName.out`
+- Valgrind [as described above](#useValgrindFormat).
+
+##### This procedure links the line numbers during the compile phase. Allowing Valgrind to show the specific line number a failure occurs on.
+
+Here's an example:
+```
+==13268== Invalid write of size 8
+==13268==    at 0x1086A8: thisFunctionDoesCauseAnIssue (valgrindtutorial.c:44)
+==13268==    by 0x108625: main (valgrindtutorial.c:21)
+==13268==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+```
+
+Suddenly, Valgrind can explain which file, function, and line an error occurred on.
+
+Dissecting This Output:  
+```
+==13268==    at 0x1086A8: thisFunctionDoesCauseAnIssue (valgrindtutorial.c:44)
+
+==[PID]==    at [Memory Address]: [Function Name] ([Source File Name]:[Line Number])
+```
+
+Taking A Look At The Code:
+
+![function blamed by valgrind for segfault](https://i.imgur.com/oIzT7vq.png "Function Dereferences Null On Line 44")
+
+Line 44 is definitely a problem, nSum->contents dereferences NULL.
+
+### Pinpoint Memory Leaks With Valgrind <a name="vgAdvLocating"></a>
+
+Valgrind can also be used to find the source of a memory leak. This is less strait forward than segfault recognition.
+
+Lets Take A Look At A Sample Output:
+```
+==13422== 708 (16 direct, 692 indirect) bytes in 1 blocks are definitely lost in loss record 7 of 7
+==13422==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==13422==    by 0x108846: createLossyNode (valgrindMemoryLeaks.c:42)
+==13422==    by 0x10876B: main (valgrindMemoryLeaks.c:26)
+```
+
+To Better Understand This, We Can Break It Down Into Lines:
+
+`1 | ==13422== 708 (16 direct, 692 indirect) bytes in... `  
+Line one describes the type and amount of memory loss experienced.  
+`2 | ==13422==    at 0x4C2FB0F: malloc (in... `  
+Line two describes the memory address and allocation function used to reserve the lost block.  
+`3 | ==13422==    by 0x108846: createLossyNode (valgrindMemoryLeaks.c:42) `  
+Line three describes the memory address, function, source code file, and line number where the allocation occured.
+`4 and Beyond`  
+Lines four and beyond are a [stack trace](https://en.wikipedia.org/wiki/Stack_trace).
+
+##### Valgrind Does Not Know HOW The Program Lost The Memory, Only That The Memory Was Lost
+
+Because Valgrind does not know where the memory was lost, it announces the only thing it does know, where the memory was allocated.
+
+This is still useful information. By understanding what was lost, debugging can be narrowed to only follow the relevant data.
+
+## Using Input and Output Files (Redirection) <a name="ioMain"></a>
 
 ### Master The < and > Symbols
 **<** *is called a left-chevron*  
@@ -256,6 +323,9 @@ Example:
 Windows: `.\outputNameYouGaveToGCCEarlier.exe > .\outputFile.txt`  
 Linux: `./outputNameYouGaveToGCCEarlier.out > ./outputFile.txt`
 
+Note:  
+The output file will be created if it does not already exist.
+
 ##### Using Both
 
 `[Input To This File & Output From This File] < [from this file] > [into this file] `
@@ -265,6 +335,11 @@ Windows: `.\outputNameYouGaveToGCCEarlier.exe < .\inputFile.in > .\outputFile.tx
 Linux: `./outputNameYouGaveToGCCEarlier.out < ./inputFile.in > ./outputFile.txt`
 
 That's how it's done. No, seriously, it's that simple.
+
+##### Yes, You Can Use It With Valgrind
+
+This Sort Of Thing Also Works  
+`valgrind ./outputNameYouGaveToGCCEarlier.out < ./inputFile.in > ./outputFile.txt`
 
 ##### Write Your Own Inputs
 - Open a text editor
