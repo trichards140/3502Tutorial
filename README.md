@@ -302,7 +302,7 @@ Line one describes the type and amount of memory loss experienced.
 `2 | ==13422==    at 0x4C2FB0F: malloc (in... `  
 Line two describes the memory address and allocation function used to reserve the lost block.  
 `3 | ==13422==    by 0x108846: createLossyNode (valgrindMemoryLeaks.c:42) `  
-Line three describes the memory address, function, source code file, and line number where the allocation occured.
+Line three describes the memory address, function, source code file, and line number where the allocation occured.  
 `4 and Beyond`  
 Lines four and beyond are a [stack trace](https://en.wikipedia.org/wiki/Stack_trace).
 
