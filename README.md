@@ -73,6 +73,10 @@ GCC is a GNU compiler for C, C++, Objective-C, Fortran, Ada, and Go.
 
   >`dnf group install 'Development Tools'`
 
+#### Arch based (Manjaro)
+
+  >`sudo pacman -Sy gcc`
+
 #### Other
 
   >`I Have No Idea - CONTRIBUTION APPRECIATED`
