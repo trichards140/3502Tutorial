@@ -129,6 +129,10 @@ GCC is a GNU compiler for C, C++, Objective-C, Fortran, Ada, and Go.
 
   >`sudo dnf install valgrind`
 
+#### Arch based (Manjaro)
+
+  >`sudo pacman -S gdb valgrind`
+
 #### Other
 
   >`I Have No Idea - CONTRIBUTION APPRECIATED`
